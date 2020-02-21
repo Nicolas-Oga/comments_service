@@ -46,18 +46,9 @@ const typeDefs = gql`
 
 const resolvers = {
   Mutation: {
-    async login(_root, { input: { google: { accessToken, idToken }  } }, context) {
-    }
+    login: (_root, { input }, _context) => new Login(input).perform()
   }
 }
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers: {
-    Mutation: {
-      login: (_root, { input }, _context) => new Login(input).perform()
-    }
-  }
-})
-
+const server = new ApolloServer({ typeDefs, resolvers })
 server.listen().then(({ url }) => console.log(`🚀 Server ready at ${url}`))
