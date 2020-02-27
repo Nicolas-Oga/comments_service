@@ -16,6 +16,7 @@ User.init({
       isEmail: true
     }
   },
+  avatarUrl: { type: Sequelize.STRING },
 }, { sequelize })
 
 export default User

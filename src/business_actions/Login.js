@@ -14,6 +14,21 @@ const oAuth2Client = new OAuth2Client(
 
 const generateToken = user => jwt.sign({ userId: user.id }, SECRET)
 
+const findOrCreateUser = async ({ email, name, avatarUrl }) => {
+  const existingUser = await User.findOne({ email })
+
+  if (existingUser) {
+    existingUser.name = name
+    existingUser.avatarUrl = avatarUrl
+
+    await existingUser.save()
+
+    return existingUser
+  } else {
+    return await User.create({ email, name, avatarUrl })
+  }
+}
+
 class Login extends BusinessAction {
   runPerformWithinTransaction = true
 
@@ -26,20 +41,21 @@ class Login extends BusinessAction {
       id_token: idToken
     })
 
+    const result =
+      await oAuth2Client.request({
+        url: 'https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses,photos'
+      })
+
     const {
       data: {
         names: [{ displayName: name }],
-        emailAddresses: [{ value: email }]
+        emailAddresses: [{ value: email }],
+        photos: [{ url: avatarUrl }]
       }
-    } =
-      await oAuth2Client.request({
-        url: 'https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses'
-      })
+    } = result
 
-    const user =
-      await User.findOne({ email }) ||
-      await User.create({ email, name })
 
+    const user = findOrCreateUser({ email, name, avatarUrl })
     const token = generateToken(user)
 
     return { token, user }
