@@ -1,5 +1,5 @@
 import BusinessAction from '../BusinessAction'
-import Comment from '../models/Comment'
+import { Comment } from '../models'
 
 class CreateComment extends BusinessAction {
   validationConstraints = {
@@ -9,10 +9,11 @@ class CreateComment extends BusinessAction {
 
   async executePerform() {
     const { postSlug, body } = this.params
+    const userId = this.performer.id
 
-    await Comment.create({ postSlug, body, userId: undefined })
+    await Comment.create({ postSlug, body, UserId: userId })
 
-    return { success: false }
+    return { success: true }
   }
 }
 

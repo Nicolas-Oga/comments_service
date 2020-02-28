@@ -4,7 +4,7 @@
   "main": "src/index.js",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon -w src -x 'babel-node ./src/index.js'",
+    "start": "nodemon -w src -e js,jsx,graphql -x 'babel-node ./src/index.js'",
     "build": "babel src --out-dir dist",
     "serve": "node dist/index.js"
   },

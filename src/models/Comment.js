@@ -11,7 +11,7 @@ Comment.init({
     type: Sequelize.STRING,
     allowNull: false
   },
-  userId: {
+  UserId: {
     type: Sequelize.INTEGER,
     allowNull: false
   }

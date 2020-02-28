@@ -18,8 +18,9 @@ class BusinessAction {
   // These are options that sub-classes can use
   validationConstraints = {}
 
-  constructor(params) {
+  constructor(params, performer) {
     this.params = params || {}
+    this.performer = performer
 
     this.errors = {}
     this.valid = true

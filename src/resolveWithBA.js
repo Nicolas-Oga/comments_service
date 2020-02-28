@@ -1,9 +1,11 @@
 import { UserInputError } from 'apollo-server'
 import { BusinesActionValidationError } from './BusinessAction'
 
-const resolveWithBA = BA => async (_root, { input }, _context) => {
+const resolveWithBA = (BA, { passingInput } = {}) => async (_root, args, { currentUser }) => {
+  const params = passingInput ? args.input : args
+
   try {
-    return await new BA(input).perform()
+    return await new BA(params, currentUser).perform()
   } catch (error) {
     if (!(error instanceof BusinesActionValidationError)) {
       throw error

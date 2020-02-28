@@ -1,76 +1,36 @@
+import fs from 'fs'
 import { ApolloServer, gql } from 'apollo-server'
 
 import resolveWithBA from './resolveWithBA'
+import AuthService from './AuthService'
 
 import Login from './business_actions/Login'
 import CreateComment from './business_actions/CreateComment'
+import ListPostComments from './business_actions/ListPostComments'
 
-const typeDefs = gql`
-  type User {
-    id: ID!
-    name: String!
-    email: String!
-    avatarUrl: String
-  }
-
-  type Vote {
-    id: ID!
-    comment: Comment!
-    user: User!
-  }
-
-  type Comment {
-    id: ID!
-    user: User!
-    body: String!
-    votes: [Vote]
-    repliesTo: Comment
-    replies: [Comment]
-    postSlug: String!
-  }
-
-  type UserAndToken {
-    token: String!
-    user: User!
-  }
-
-  type GenericOperationResponse {
-    success: Boolean!
-  }
-
-  input GoogleOAuthData {
-    accessToken: String!
-    idToken: String!
-  }
-
-  input LoginInput {
-    google: GoogleOAuthData!
-  }
-
-  input CreateCommentInput {
-    postSlug: String
-    body: String!
-  }
-
-  type Mutation {
-    login(input: LoginInput!): UserAndToken!
-    createComment(input: CreateCommentInput!): GenericOperationResponse!
-  }
-
-  type Query {
-    comments(postSlug: String!): [Comment]
-  }
-`;
+const typeDefs = gql`${fs.readFileSync(__dirname.concat('/schema.graphql'))}`
 
 const resolvers = {
+  Query: {
+    postComments: resolveWithBA(ListPostComments)
+  },
   Mutation: {
-    login: resolveWithBA(Login),
-    createComment: resolveWithBA(CreateComment)
+    login: resolveWithBA(Login, { passingInput: true }),
+    createComment: resolveWithBA(CreateComment, { passingInput: true })
   }
 }
 
 const server = new ApolloServer({
-  typeDefs: gql`${fs.readFileSync(__dirname.concat('/schema.graphql'))}`,
-  resolvers
+  resolvers,
+  typeDefs,
+  context: async ({ req }) => {
+    const token = req.headers.authorization
+
+    if (token) {
+      const currentUser = await AuthService.getUser(token)
+      return { currentUser }
+    }
+  }
 })
+
 server.listen().then(({ url }) => console.log(`🚀 Server ready at ${url}`))

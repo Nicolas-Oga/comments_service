@@ -1,0 +1,58 @@
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  avatarUrl: String
+}
+
+type Vote {
+  id: ID!
+  comment: Comment!
+  user: User!
+}
+
+type Comment {
+  id: ID!
+  createdAt: String!
+  user: User!
+  body: String!
+  votes: [Vote]
+  repliesTo: Comment
+  replies: [Comment]
+  postSlug: String!
+}
+
+type UserAndToken {
+  token: String!
+  user: User!
+}
+
+type GenericOperationResponse {
+  success: Boolean!
+}
+
+input GoogleOAuthData {
+  accessToken: String!
+  idToken: String!
+}
+
+input LoginInput {
+  google: GoogleOAuthData!
+}
+
+input CreateCommentInput {
+  postSlug: String
+  body: String!
+}
+
+type Mutation {
+  login(input: LoginInput!): UserAndToken!
+  createComment(input: CreateCommentInput!): GenericOperationResponse!
+  deleteComment(commentId: Int!): GenericOperationResponse!
+  upvoteComment(commentId: Int!): GenericOperationResponse!
+  downvoteComment(commentId: Int!): GenericOperationResponse!
+}
+
+type Query {
+  postComments(postSlug: String!): [Comment]
+}
