@@ -10,18 +10,16 @@ class ListPostComments extends BusinessAction {
     const { postSlug } = this.params
     const comments = await Comment.findAll({ where: { postSlug }, include: User })
 
-    const mapedComments = comments.map(comment => ({
+    return comments.map(comment => ({
       id: comment.id,
       createdAt: comment.createdAt.toISOString(),
       body: comment.body,
       user: {
+        id: comment.User.id,
         name: comment.User.name,
         avatarUrl: comment.User.avatarUrl
       }
     }))
-
-    console.log(mapedComments[0].id)
-    return mapedComments
   }
 }
 

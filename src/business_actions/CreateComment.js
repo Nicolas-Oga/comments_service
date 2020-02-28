@@ -12,8 +12,6 @@ class CreateComment extends BusinessAction {
     const userId = this.performer.id
 
     await Comment.create({ postSlug, body, UserId: userId })
-
-    return { success: true }
   }
 }
 

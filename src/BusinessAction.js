@@ -11,6 +11,13 @@ class BusinesActionValidationError {
   }
 }
 
+class BusinesActionForbiddenError {
+  constructor(ba, errors) {
+    this.name = 'BusinesActionForbiddenError'
+    this.businessAction = ba
+  }
+}
+
 // Abstract class that implements command object pattern.
 // These should be the building block for business logic.
 // Organize BAs inside domains.
@@ -28,8 +35,10 @@ class BusinessAction {
 
   async perform() {
     const valid = await this.validate()
-
     if (!valid) throw new BusinesActionValidationError(this)
+
+    const isAllowed = await this.isAllowed()
+    if (!isAllowed) throw new BusinesActionForbiddenError(this)
 
     const result = this.executePerform()
 
@@ -39,7 +48,9 @@ class BusinessAction {
     return result
   }
 
+  // You can overwrite these
   executePerform() { throw 'You must define this' }
+  async isAllowed() { return true }
 
   async validate() {
     try {
@@ -92,5 +103,5 @@ class BusinessAction {
   }
 }
 
-export { BusinesActionValidationError }
+export { BusinesActionValidationError, BusinesActionForbiddenError }
 export default BusinessAction

@@ -48,9 +48,7 @@ input CreateCommentInput {
 type Mutation {
   login(input: LoginInput!): UserAndToken!
   createComment(input: CreateCommentInput!): GenericOperationResponse!
-  deleteComment(commentId: Int!): GenericOperationResponse!
-  upvoteComment(commentId: Int!): GenericOperationResponse!
-  downvoteComment(commentId: Int!): GenericOperationResponse!
+  deleteComment(commentId: ID!): GenericOperationResponse!
 }
 
 type Query {
