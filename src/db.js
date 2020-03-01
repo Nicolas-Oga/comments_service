@@ -2,8 +2,10 @@ import { readFileSync } from 'fs'
 import path from 'path'
 import Sequelize from 'sequelize'
 
+import allConfig from '../db/config'
+
 const env = process.env.NODE_ENV || 'development';
-const config = JSON.parse(readFileSync(path.resolve(__dirname, '../db/config.json')))[env]
+const config = allConfig[env]
 
 const sequelize = new Sequelize(
   config.database,

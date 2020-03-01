@@ -1,5 +1,6 @@
 import fs from 'fs'
 import { ApolloServer, gql } from 'apollo-server'
+import { ApolloLogExtension } from 'apollo-log'
 
 import resolveWithBA from './resolveWithBA'
 import AuthService from './AuthService'
@@ -25,6 +26,7 @@ const resolvers = {
 const server = new ApolloServer({
   resolvers,
   typeDefs,
+  extensions: [_ => new ApolloLogExtension()],
   context: async ({ req }) => {
     const token = req.headers.authorization
 
