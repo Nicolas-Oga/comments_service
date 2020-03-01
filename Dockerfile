@@ -8,4 +8,4 @@ RUN yarn install
 ADD . $WORKDIR
 RUN yarn build
 
-CMD sh ./entrypoint.sh
+CMD sh ./docker-entrypoint.sh
