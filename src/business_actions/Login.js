@@ -4,12 +4,6 @@ import BusinessAction from '../BusinessAction'
 import AuthService from '../AuthService'
 import { User } from '../models'
 
-const oAuth2Client = new OAuth2Client(
-  process.env.GOOGLE_OAUTH_KEY,
-  process.env.GOOGLE_OAUTH_SECRET,
-  'http://localhost:8080'
-)
-
 const findOrCreateUser = async ({ email, name, avatarUrl }) => {
   const existingUser = await User.findOne({ email })
 
@@ -30,6 +24,12 @@ class Login extends BusinessAction {
 
   async executePerform() {
     const { google: { accessToken, idToken }} = this.params
+
+    const oAuth2Client = new OAuth2Client(
+      process.env.GOOGLE_OAUTH_KEY,
+      process.env.GOOGLE_OAUTH_SECRET,
+      'http://localhost:8080'
+    )
 
     oAuth2Client.setCredentials({
       token_type: 'Bearer',
