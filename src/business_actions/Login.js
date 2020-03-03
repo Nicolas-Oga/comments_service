@@ -5,8 +5,8 @@ import AuthService from '../AuthService'
 import { User } from '../models'
 
 const oAuth2Client = new OAuth2Client(
-  '785765963117-762e5rprni8gr0l2omjgbj8agi5v70e8.apps.googleusercontent.com',
-  'C1-jyR0S7zd5uqa9BDsEMkb4',
+  process.env.GOOGLE_OAUTH_KEY,
+  process.env.GOOGLE_OAUTH_SECRET,
   'http://localhost:8080'
 )
 

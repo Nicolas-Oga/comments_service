@@ -8,4 +8,4 @@ RUN yarn install
 COPY . ./
 RUN yarn build
 
-CMD sh ./docker-entrypoint.sh
+CMD sh ./docker-entrypoint.sh ./
