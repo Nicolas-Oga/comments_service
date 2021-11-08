@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "apollo-log": "^0.1.0",
-    "apollo-server": "^2.10.1",
+    "apollo-server": "^2.25.3",
     "google-auth-library": "^5.9.2",
     "jsonwebtoken": "^8.5.1",
     "lodash.update": "^4.10.2",
